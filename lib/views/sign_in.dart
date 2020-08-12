@@ -1,12 +1,16 @@
+// import 'package:chat_app/views/sign_up.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-class SingIn extends StatefulWidget {
+class SignIn extends StatefulWidget {
+  final Function toggle;
+  SignIn(this.toggle);
+
   @override
-  _SingInState createState() => _SingInState();
+  _SignInState createState() => _SignInState();
 }
 
-class _SingInState extends State<SingIn> {
+class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,12 +97,20 @@ class _SingInState extends State<SingIn> {
                       "Don't have account? ",
                       style: mediumTextStyle(),
                     ),
-                    Text(
-                      "Register now",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17.0,
-                        decoration: TextDecoration.underline,
+                    GestureDetector(
+                      onTap: () {
+                        widget.toggle();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                          "Register now",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17.0,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
                       ),
                     ),
                   ],
