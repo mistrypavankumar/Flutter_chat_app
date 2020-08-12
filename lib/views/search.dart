@@ -1,4 +1,5 @@
 import 'package:chat_app/widgets/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/services/database.dart';
 
@@ -12,13 +13,31 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchTextEditingController =
       new TextEditingController();
 
-  Widget searchList() {
-    return ListView.builder(itemBuilder: (context, index) {
-      return SearchTile(
-        userName: "",
-        userEmail: "",
-      );
+  QuerySnapshot searchSnapshot;
+
+  initialSearch() {
+    databaseMethods
+        .getUserByUsername(searchTextEditingController.text)
+        .then((val) {
+      setState(() {
+        searchSnapshot = val;
+      });
     });
+  }
+
+  Widget searchList() {
+    return searchSnapshot != null
+        ? ListView.builder(
+            itemCount: searchSnapshot.documents.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return SearchTile(
+                userName: searchSnapshot.documents[index].data["name"],
+                userEmail: searchSnapshot.documents[index].data["email"],
+              );
+            },
+          )
+        : Container();
   }
 
   @override
@@ -51,11 +70,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   GestureDetector(
                     onTap: () {
                       // onTap search username
-                      databaseMethods
-                          .getUserByUsername(searchTextEditingController.text)
-                          .then((val) {
-                        print(val.toString());
-                      });
+                      initialSearch();
                     },
                     child: Container(
                       height: 40.0,
@@ -75,7 +90,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ],
               ),
-            )
+            ),
+            searchList(),
           ],
         ),
       ),
@@ -92,19 +108,33 @@ class SearchTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
       child: Row(
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 userName,
-                style: simpleTextStyle(),
+                style: mediumTextStyle(),
               ),
               Text(
                 userEmail,
-                style: simpleTextStyle(),
+                style: mediumTextStyle(),
               ),
             ],
+          ),
+          Spacer(),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Text(
+              "Message",
+              style: mediumTextStyle(),
+            ),
           )
         ],
       ),
