@@ -42,6 +42,7 @@ android {
         applicationId "com.mg143.chat_app"
         minSdkVersion 16
         targetSdkVersion 28
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -60,5 +61,6 @@ flutter {
 }
 
 dependencies {
+    implementation "com.android.support:multidex:1.0.3"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
