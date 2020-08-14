@@ -8,7 +8,24 @@ class DatabaseMethods {
         .getDocuments();
   }
 
+  getUserByUserEmail(String userEmail) async {
+    return await Firestore.instance
+        .collection("user")
+        .where("email", isEqualTo: userEmail)
+        .getDocuments();
+  }
+
   uploadUserInfo(userMap) {
     Firestore.instance.collection("users").add(userMap);
+  }
+
+  createChatRoom(String chatRoomId, chatRoomMap) {
+    Firestore.instance
+        .collection("ChatRoom")
+        .document(chatRoomId)
+        .setData(chatRoomMap)
+        .catchError((e) {
+      print(e.toString());
+    });
   }
 }
