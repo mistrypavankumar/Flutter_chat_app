@@ -1,8 +1,8 @@
+import 'package:chat_app/helper/helperfunction.dart';
 import 'package:chat_app/services/auth.dart';
 import 'package:chat_app/services/database.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-
 import 'chatRoomScreen.dart';
 
 class SignUP extends StatefulWidget {
@@ -32,6 +32,16 @@ class _SignUPState extends State<SignUP> {
   // loading option
   signMeUP() {
     if (formKey.currentState.validate()) {
+      Map<String, String> userInfoMap = {
+        "name": userNameTextEditingController.text,
+        "email": emailTextEditingController.text,
+      };
+
+      HelperFunctions.saveUserEmailSharedPreference(
+          emailTextEditingController.text);
+      HelperFunctions.saveUserNameSharedPreference(
+          userNameTextEditingController.text);
+
       setState(() {
         isloading = true;
       });
@@ -40,13 +50,9 @@ class _SignUPState extends State<SignUP> {
           .signUpWithEmailAndPassword(emailTextEditingController.text,
               passwordTextEditingController.text)
           .then((val) {
-        // print("${val.uid}");
+        // print("${val.userId}");
 
         //Navigation to another screen
-        Map<String, String> userInfoMap = {
-          "name": userNameTextEditingController.text,
-          "email": emailTextEditingController.text,
-        };
 
         databaseMethods.uploadUserInfo(userInfoMap);
         Navigator.pushReplacement(
